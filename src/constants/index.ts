@@ -24,5 +24,3 @@ export const navLinks = [
     path: '#contact',
   },
 ] as const
-
-export const adminEmail = 'k.abhinav1000@gmail.com'

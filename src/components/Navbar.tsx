@@ -8,6 +8,7 @@ import { useActiveSectionContext } from '@/context/ActiveSectionContext'
 import { navLinks } from '@/constants'
 import { useState } from 'react'
 import Image from 'next/image'
+import { AdminLoginModal } from '@/components'
 
 const Navbar = () => {
   const { activeSection, setActiveSection } = useActiveSectionContext()
@@ -71,9 +72,9 @@ const Navbar = () => {
             variants={navLinkVariants(navLinks.length)}
             initial="hidden"
             whileInView="show"
-            className="h-3/4 flex items-center justify-center relative"
+            className="h-3/4 flex items-center justify-center relative p-1"
           >
-            Login
+            <AdminLoginModal type="desktop" />
           </motion.li>
         </motion.div>
       </nav>
@@ -125,7 +126,9 @@ const Navbar = () => {
                   </Link>
                 </li>
               ))}
-              <li>Login</li>
+              <li>
+                <AdminLoginModal type="mobile" />
+              </li>
             </ul>
           </nav>
         )}

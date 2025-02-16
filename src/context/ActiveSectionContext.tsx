@@ -1,7 +1,9 @@
 'use client'
 
-import { SectionName } from '@/types'
+import { navLinks } from '@/constants'
 import React, { createContext, useContext, useState } from 'react'
+
+type SectionName = (typeof navLinks)[number]['name']
 
 type ActiveSectionContextType = {
   activeSection: SectionName

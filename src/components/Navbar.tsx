@@ -12,6 +12,7 @@ import { AdminLoginModal } from '@/components'
 
 const Navbar = () => {
   const { activeSection, setActiveSection } = useActiveSectionContext()
+
   const [isMobileOpen, setMobileOpen] = useState(false)
 
   return (

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Baloo_Paaji_2, Roboto } from 'next/font/google'
 import './globals.css'
 import { ActiveSectionContextProvider } from '@/context/ActiveSectionContext'
+import { UserProvider } from '@/context/UserContext'
 
 const fontRoboto = Roboto({
   subsets: ['latin'],
@@ -31,7 +32,11 @@ export default function RootLayout({
       <body
         className={`${fontBaloo.variable} ${fontRoboto.variable} font-baloo bg-dark-700 text-dark-200 antialiased overflow-x-hidden`}
       >
-        <ActiveSectionContextProvider>{children}</ActiveSectionContextProvider>
+        <UserProvider>
+          <ActiveSectionContextProvider>
+            {children}
+          </ActiveSectionContextProvider>
+        </UserProvider>
       </body>
     </html>
   )

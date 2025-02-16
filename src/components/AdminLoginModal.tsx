@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   Dialog,
@@ -17,18 +17,25 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
 import { z } from 'zod'
+import { sendOtp, verifyOtp } from '@/actions/auth.actions'
+import { useRouter } from 'next/navigation'
+import { useUserContext } from '@/context/UserContext'
 
 interface AdminLoginModalProps {
   type?: 'desktop' | 'mobile'
 }
 
-const phoneSchema = z.string()
+const phoneSchema = z
+  .string()
+  .length(10, { message: 'Phone number must have 10 digits' })
 const otpSchema = z
   .string()
   .length(6, { message: 'Code must be 6 digits long' })
 
 const AdminLoginModal = ({ type = 'desktop' }: AdminLoginModalProps) => {
-  const adminPhoneConst = process.env.NEXT_PUBLIC_ADMIN_PHONE_NUMBER
+  const router = useRouter()
+
+  const { isAuthenticated } = useUserContext()
 
   const [step, setStep] = useState<'send' | 'verify'>('send')
   const [adminPhone, setAdminPhone] = useState<string>('')
@@ -43,17 +50,17 @@ const AdminLoginModal = ({ type = 'desktop' }: AdminLoginModalProps) => {
       phoneSchema.parse(adminPhone)
       setError('')
 
-      if (adminPhone !== adminPhoneConst) {
-        setError('Invalid admin phone number')
-        return
-      }
+      await sendOtp(adminPhone)
 
-      // TODO: sendOTP()
-    } catch (error) {
+      setStep('verify')
+    } catch (error: any) {
       if (error instanceof z.ZodError) {
         setError(error.errors[0]?.message || 'Invalid input')
       } else {
-        setError('Failed to send the verification code. Please try again.')
+        setError(
+          error.message ||
+            'Failed to send the verification code. Please try again.'
+        )
         console.error('Failed to send the verification code: ', error)
       }
     } finally {
@@ -68,12 +75,16 @@ const AdminLoginModal = ({ type = 'desktop' }: AdminLoginModalProps) => {
       otpSchema.parse(otp)
       setError('')
 
-      // TODO: verifyOtp()
-    } catch (error) {
+      const user = await verifyOtp(adminPhone, otp)
+
+      if (user) router.push('/admin')
+    } catch (error: any) {
       if (error instanceof z.ZodError) {
         setError(error.errors[0]?.message || 'Invalid input')
       } else {
-        setError('Failed to verify the code. Please try again.')
+        setError(
+          error.message || 'Failed to verify the code. Please try again.'
+        )
         console.error('Error verifying otp: ', error)
       }
     } finally {
@@ -84,7 +95,10 @@ const AdminLoginModal = ({ type = 'desktop' }: AdminLoginModalProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Link href="#" className="flex items-center justify-center">
+        <Link
+          href={isAuthenticated ? '/admin' : '#'}
+          className="flex items-center justify-center"
+        >
           {type === 'desktop' ? (
             <Image
               src="/assets/icons/admin.svg"

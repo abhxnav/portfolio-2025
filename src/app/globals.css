@@ -151,7 +151,7 @@ body {
   height: 100vh;
   top: 0;
   left: 0;
-  filter: blur(100px) brightness(0.15);
+  filter: blur(100px) brightness(0.25);
 }
 
 .frost {
@@ -234,6 +234,10 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+.data-\[state\=active\]\:bg-background[data-state="active"] {
+  @apply bg-dark-400 !important;
 }
 
 @layer base {

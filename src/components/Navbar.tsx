@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <header className="z-50 relative">
       {/* Desktop Navbar */}
-      <nav className="fixed top-9 left-[calc(50%-35px)] hidden sm:block">
+      <nav className="fixed top-9 left-[calc(50%-25px)] hidden sm:block">
         <motion.div
           className="flex gap-5 items-center text-base font-medium text-dark-200 rounded-full border border-dark-500 bg-dark-600 backdrop-blur-[6px] bg-opacity-80 py-2 px-4"
           variants={navVariants}
@@ -61,9 +61,9 @@ const Navbar = () => {
       </nav>
 
       {/* Login Button */}
-      <nav className="fixed top-9 left-[calc(50%+290px)] hidden sm:block">
+      <nav className="fixed top-[38px] left-[calc(50%+295px)] hidden sm:block">
         <motion.div
-          className="flex items-center justify-center rounded-full bg-dark-600 border border-dark-500 backdrop-blur-[6px] bg-opacity-80 p-3"
+          className="flex items-center justify-center rounded-full bg-dark-600 border border-dark-500 backdrop-blur-[6px] bg-opacity-80 p-4"
           variants={navVariants}
           initial="hidden"
           whileInView="show"
@@ -73,7 +73,7 @@ const Navbar = () => {
             variants={navLinkVariants(navLinks.length)}
             initial="hidden"
             whileInView="show"
-            className="h-3/4 flex items-center justify-center relative p-1"
+            className="flex items-center justify-center"
           >
             <AdminLoginModal type="desktop" />
           </motion.li>

@@ -19,3 +19,6 @@ export { default as TitleText } from '@/components/shared/TitleText'
 export { default as CustomFormField } from '@/components/shared/CustomFormField'
 export { default as MarkdownEditor } from '@/components/shared/MarkdownEditor'
 export { default as VerifyCode } from '@/components/shared/VerifyCode'
+export { default as FileUploader } from '@/components/shared/FileUploader'
+
+export { default as SkillsForm } from '@/components/forms/SkillsForm'

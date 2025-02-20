@@ -6,9 +6,18 @@ import {
   FormMessage,
   Input,
 } from '@/components/ui'
-import { ICustomFormField } from '@/types'
 import clsx from 'clsx'
-import { MarkdownEditor } from '@/components'
+import { FileUploader, MarkdownEditor } from '@/components'
+
+interface CustomFormFieldProps {
+  control: any
+  name: string
+  label?: string
+  type?: 'input' | 'textarea' | 'file'
+  placeholder?: string
+  labelClass?: string
+  inputClass?: string
+}
 
 const CustomFormField = ({
   control,
@@ -18,7 +27,7 @@ const CustomFormField = ({
   placeholder = '',
   labelClass = '',
   inputClass = '',
-}: ICustomFormField) => {
+}: CustomFormFieldProps) => {
   const renderField = (type: string, field: any) => {
     switch (type) {
       case 'input':
@@ -27,7 +36,7 @@ const CustomFormField = ({
             placeholder={placeholder}
             {...field}
             className={clsx(
-              'border border-dark-500 bg-dark-500/20 !text-lg text-dark-200 py-6 px-4 rounded-lg',
+              'border border-dark-500 bg-dark-500/20 text-dark-200 p-4 rounded-lg',
               inputClass
             )}
           />
@@ -41,6 +50,9 @@ const CustomFormField = ({
             className={inputClass}
           />
         )
+
+      case 'file':
+        return <FileUploader file={field.value} onChange={field.onChange} />
     }
   }
 
@@ -50,7 +62,7 @@ const CustomFormField = ({
       name={name}
       render={({ field }) => (
         <FormItem className="w-full">
-          <FormLabel className={clsx('text-xl text-dark-200', labelClass)}>
+          <FormLabel className={clsx('text-lg text-dark-200', labelClass)}>
             {label}
           </FormLabel>
           <FormControl>{renderField(type, field)}</FormControl>

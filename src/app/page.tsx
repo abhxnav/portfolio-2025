@@ -9,7 +9,6 @@ import {
   WorkExperience,
   World,
 } from '@/components'
-import { env } from '@/env'
 
 const Home = () => {
   return (

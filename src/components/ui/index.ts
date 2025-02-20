@@ -49,3 +49,5 @@ export {
 } from '@/components/ui/form'
 
 export { Textarea } from '@/components/ui/textarea'
+
+export { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'

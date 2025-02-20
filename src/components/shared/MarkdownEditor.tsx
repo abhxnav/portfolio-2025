@@ -1,13 +1,22 @@
 'use client'
 
-import { IMarkdownEditor } from '@/types'
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Button } from '@/components'
 import clsx from 'clsx'
 
-const MarkdownEditor = ({ value, onChange, className }: IMarkdownEditor) => {
+interface MarkdownEditorProps {
+  value: string
+  onChange: (value: string) => void
+  className?: string
+}
+
+const MarkdownEditor = ({
+  value,
+  onChange,
+  className,
+}: MarkdownEditorProps) => {
   const [previewMode, setPreviewMode] = useState(false)
 
   return (

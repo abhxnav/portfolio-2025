@@ -7,7 +7,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form } from '@/components/ui'
 import { CustomFormField } from '@/components'
 import { useEffect, useState } from 'react'
-import { addItemToDatabase, getAllItems } from '@/actions/data.actions'
+import {
+  addItemToDatabase,
+  deleteItem,
+  getAllItems,
+} from '@/actions/data.actions'
 import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -71,6 +75,17 @@ const SocialsForm = () => {
     setLoading(false)
   }
 
+  const handleDelete = async (id: string) => {
+    const res = await deleteItem(id, 'socials_dataset')
+
+    if (res.success) {
+      const res = await getAllItems('socials_dataset')
+      setExistingSocials(res.data || [])
+    } else {
+      setMessage({ type: 'error', text: res.message })
+    }
+  }
+
   return (
     <div className="flex flex-col gap-10 py-8">
       <Form {...form}>
@@ -127,7 +142,13 @@ const SocialsForm = () => {
                   height={10}
                   className="size-12 object-contain"
                 />
-                <p className="text-sm">{social?.name}</p>
+                <p>{social?.name}</p>
+                <button
+                  className="text-xs bg-red-800 px-2 rounded-xl hover:brightness-90"
+                  onClick={() => handleDelete(social.id)}
+                >
+                  Delete
+                </button>
               </div>
             ))
           ) : (

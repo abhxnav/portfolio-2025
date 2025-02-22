@@ -63,3 +63,17 @@ export const getAllItems = async (table: string) => {
     return { success: false, message: error.message }
   }
 }
+
+export const deleteItem = async (id: string, table: string) => {
+  const { error } = await supabaseBrowserClient
+    .from(table)
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('Error deleting item:', error.message)
+    return { success: false, message: error.message }
+  }
+
+  return { success: true, message: 'Item deleted successfully!' }
+}

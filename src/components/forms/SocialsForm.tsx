@@ -1,6 +1,6 @@
 'use client'
 
-import { skillsFormSchema } from '@/lib/validations'
+import { socialsFormSchema } from '@/lib/validations'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,15 +16,15 @@ interface FormMessageType {
   text: string
 }
 
-interface Skill {
+interface Social {
   id: string
   name: string
   icon: string
 }
 
-const SkillsForm = () => {
-  const form = useForm<z.infer<typeof skillsFormSchema>>({
-    resolver: zodResolver(skillsFormSchema),
+const SocialsForm = () => {
+  const form = useForm<z.infer<typeof socialsFormSchema>>({
+    resolver: zodResolver(socialsFormSchema),
     defaultValues: {
       name: '',
       icon: undefined,
@@ -35,18 +35,18 @@ const SkillsForm = () => {
 
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<FormMessageType | null>(null)
-  const [existingSkills, setExistingSkills] = useState<Skill[] | null>(null)
+  const [existingSocials, setExistingSocials] = useState<Social[] | null>(null)
 
   useEffect(() => {
-    const getSkills = async () => {
-      const res = await getAllItems('skills_dataset')
-      setExistingSkills(res.data || [])
+    const getSocials = async () => {
+      const res = await getAllItems('socials_dataset')
+      setExistingSocials(res.data || [])
     }
 
-    getSkills()
+    getSocials()
   }, [])
 
-  const onSubmit = async (data: z.infer<typeof skillsFormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof socialsFormSchema>) => {
     setLoading(true)
     setMessage(null)
 
@@ -54,16 +54,16 @@ const SkillsForm = () => {
 
     const response = await addItemToDatabase(
       { name, icon },
-      'skills_dataset',
-      'skills'
+      'socials_dataset',
+      'socials'
     )
 
     if (response.success) {
       setMessage({ type: 'success', text: response.message })
       reset()
 
-      const res = await getAllItems('skills_dataset')
-      setExistingSkills(res.data || [])
+      const res = await getAllItems('socials_dataset')
+      setExistingSocials(res.data || [])
     } else {
       setMessage({ type: 'error', text: response.message })
     }
@@ -78,7 +78,7 @@ const SkillsForm = () => {
           <CustomFormField
             control={control}
             name="name"
-            label="Skill name"
+            label="Social Name"
             type="input"
           />
           <CustomFormField
@@ -95,10 +95,10 @@ const SkillsForm = () => {
             {loading ? (
               <div className="flex items-center justify-center gap-2">
                 <Loader2 className="animate-spin" />
-                <p>Adding skill...</p>
+                <p>Adding social...</p>
               </div>
             ) : (
-              'Add skill'
+              'Add social'
             )}
           </button>
 
@@ -115,19 +115,19 @@ const SkillsForm = () => {
       </Form>
 
       <div className="flex flex-col gap-4 text-dark-200">
-        <h2 className="text-xl font-semibold">Existing skills</h2>
+        <h2 className="text-xl font-semibold">Existing socials</h2>
         <div className="flex items-center gap-4">
-          {existingSkills ? (
-            existingSkills.map((skill: Skill) => (
-              <div className="flex flex-col gap-1 items-center" key={skill.id}>
+          {existingSocials ? (
+            existingSocials.map((social: Social) => (
+              <div className="flex flex-col gap-1 items-center" key={social.id}>
                 <Image
-                  src={skill?.icon}
-                  alt={skill?.name}
+                  src={social?.icon}
+                  alt={social?.name}
                   width={10}
                   height={10}
                   className="size-12 object-contain"
                 />
-                <p className="text-sm">{skill?.name}</p>
+                <p className="text-sm">{social?.name}</p>
               </div>
             ))
           ) : (
@@ -139,4 +139,4 @@ const SkillsForm = () => {
   )
 }
 
-export default SkillsForm
+export default SocialsForm

@@ -1,18 +1,18 @@
 import { supabaseBrowserClient } from '@/lib/supabase/client'
-import { skillsFormSchema } from '@/lib/validations'
-import { z } from 'zod'
 
-export const addSkillToDataset = async (
-  data: z.infer<typeof skillsFormSchema>
+export const addItemToDatabase = async (
+  data: { name: string; icon?: File | string; url?: string },
+  table: 'skills_dataset' | 'socials_dataset',
+  bucket?: 'skills' | 'socials'
 ) => {
   let iconUrl = ''
 
   try {
-    if (data.icon && typeof data.icon !== 'string') {
+    if (bucket && data?.icon && typeof data.icon !== 'string') {
       const file = data.icon as File
       const { data: uploadData, error: uploadError } =
         await supabaseBrowserClient.storage
-          .from('skills')
+          .from(bucket)
           .upload(`icons/${Date.now()}-${file.name}`, file)
 
       if (uploadError) throw uploadError
@@ -20,36 +20,46 @@ export const addSkillToDataset = async (
       const {
         data: { publicUrl },
       } = supabaseBrowserClient.storage
-        .from('skills')
+        .from(bucket)
         .getPublicUrl(uploadData.path)
 
       iconUrl = publicUrl
     }
 
+    const insertData: any = { name: data?.name }
+    if (iconUrl) insertData.icon = iconUrl
+    if (data.url) insertData.url = data.url
+
     const { error: insertError } = await supabaseBrowserClient
-      .from('skills_dataset')
-      .insert([{ name: data?.name, icon: iconUrl }])
+      .from(table)
+      .insert([insertData])
 
     if (insertError) throw insertError
 
-    return { success: true, message: 'Skill added successfully!' }
+    return {
+      success: true,
+      message: `${
+        table === 'skills_dataset' ? 'Skill' : 'Social'
+      } added successfully!`,
+    }
   } catch (error: any) {
-    console.error('Error adding skill:', error.message)
+    console.error(
+      `Error adding ${table === 'skills_dataset' ? 'skill' : 'social'}:`,
+      error.message
+    )
     return { success: false, message: error.message }
   }
 }
 
-export const getAllSkills = async () => {
+export const getAllItems = async (table: string) => {
   try {
-    const { data, error } = await supabaseBrowserClient
-      .from('skills_dataset')
-      .select('*')
+    const { data, error } = await supabaseBrowserClient.from(table).select('*')
 
     if (error) throw error
 
     return { success: true, data }
   } catch (error: any) {
-    console.error('Error fetching skills:', error.message)
+    console.error('Error fetching items:', error.message)
     return { success: false, message: error.message }
   }
 }

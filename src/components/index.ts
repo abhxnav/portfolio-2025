@@ -22,3 +22,4 @@ export { default as VerifyCode } from '@/components/shared/VerifyCode'
 export { default as FileUploader } from '@/components/shared/FileUploader'
 
 export { default as SkillsForm } from '@/components/forms/SkillsForm'
+export { default as SocialsForm } from '@/components/forms/SocialsForm'

@@ -1,4 +1,4 @@
-import { SkillsForm } from '@/components'
+import { SkillsForm, SocialsForm } from '@/components'
 import IframeComponent from '@/components/shared/IFrameComponent'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { env } from '@/lib/envConfig'
@@ -38,8 +38,7 @@ const page = () => {
             <SkillsForm />
           </TabsContent>
           <TabsContent value="socials">
-            {/* <SocialsForm/> */}
-            Socials Form
+            <SocialsForm />
           </TabsContent>
         </Tabs>
       </div>

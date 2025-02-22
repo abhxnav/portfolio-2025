@@ -4,3 +4,8 @@ export const skillsFormSchema = z.object({
   name: z.string().min(1),
   icon: z.custom<File>((file) => file instanceof File),
 })
+
+export const socialsFormSchema = z.object({
+  name: z.string().min(1),
+  icon: z.custom<File>((file) => file instanceof File),
+})

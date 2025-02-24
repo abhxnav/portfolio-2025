@@ -1,4 +1,4 @@
-import { SkillsForm, SocialsForm } from '@/components'
+import { AdminDataForm, SkillsForm, SocialsForm } from '@/components'
 import IframeComponent from '@/components/shared/IFrameComponent'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui'
 import { env } from '@/lib/envConfig'
@@ -10,6 +10,7 @@ const page = () => {
     <>
       <div className="w-full md:w-1/2 p-12 md:pr-0">
         <Tabs defaultValue="data">
+          {/* Tabs */}
           <TabsList className="w-full bg-dark-600">
             <TabsTrigger
               value="data"
@@ -30,13 +31,18 @@ const page = () => {
               Socials
             </TabsTrigger>
           </TabsList>
+
+          {/* Admin Data Form */}
           <TabsContent value="data">
-            {/* <AdminDataForm /> */}
-            Admin data form
+            <AdminDataForm />
           </TabsContent>
+
+          {/* Skills Form */}
           <TabsContent value="skills">
             <SkillsForm />
           </TabsContent>
+
+          {/* Socials Form */}
           <TabsContent value="socials">
             <SocialsForm />
           </TabsContent>

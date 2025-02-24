@@ -5,18 +5,24 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui'
 import clsx from 'clsx'
-import { FileUploader, MarkdownEditor } from '@/components'
+import { FileUploader, MarkdownEditor, MultiSelect } from '@/components'
 
 interface CustomFormFieldProps {
   control: any
   name: string
   label?: string
-  type?: 'input' | 'textarea' | 'file'
+  type?: 'input' | 'textarea' | 'file' | 'select' | 'multi-select'
   placeholder?: string
   labelClass?: string
   inputClass?: string
+  options?: { label: string; value: string }[]
 }
 
 const CustomFormField = ({
@@ -27,6 +33,7 @@ const CustomFormField = ({
   placeholder = '',
   labelClass = '',
   inputClass = '',
+  options = [],
 }: CustomFormFieldProps) => {
   const renderField = (type: string, field: any) => {
     switch (type) {
@@ -48,11 +55,48 @@ const CustomFormField = ({
             value={field.value || ''}
             onChange={field.onChange}
             className={inputClass}
+            placeholder={placeholder}
           />
         )
 
       case 'file':
-        return <FileUploader file={field.value} onChange={field.onChange} />
+        return (
+          <FileUploader
+            file={field.value}
+            onChange={field.onChange}
+            className={inputClass}
+          />
+        )
+
+      case 'select':
+        return (
+          <Select onValueChange={field.onChange} value={field.value}>
+            <SelectTrigger
+              className={clsx(
+                'border border-dark-500 text-dark-200',
+                inputClass
+              )}
+            >
+              <SelectValue placeholder={placeholder} />
+            </SelectTrigger>
+            <SelectContent>
+              {options?.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )
+
+      case 'multi-select':
+        return (
+          <MultiSelect
+            value={field.value || []}
+            onChange={field.onChange}
+            options={options}
+          />
+        )
     }
   }
 
@@ -62,9 +106,11 @@ const CustomFormField = ({
       name={name}
       render={({ field }) => (
         <FormItem className="w-full">
-          <FormLabel className={clsx('text-lg text-dark-200', labelClass)}>
-            {label}
-          </FormLabel>
+          {label && (
+            <FormLabel className={clsx('text-lg text-dark-200', labelClass)}>
+              {label}
+            </FormLabel>
+          )}
           <FormControl>{renderField(type, field)}</FormControl>
           <FormMessage />
         </FormItem>

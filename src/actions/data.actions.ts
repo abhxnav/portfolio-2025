@@ -1,18 +1,17 @@
 import { supabaseBrowserClient } from '@/lib/supabase/client'
 
-export const addItemToDatabase = async (
-  data: { name: string; icon?: File | string; url?: string },
-  table: 'skills_dataset' | 'socials_dataset',
-  bucket?: 'skills' | 'socials'
-) => {
+export const addSkillToDatabase = async (data: {
+  name: string
+  icon?: File | string
+}) => {
   let iconUrl = ''
 
   try {
-    if (bucket && data?.icon && typeof data.icon !== 'string') {
+    if (data?.icon && typeof data.icon !== 'string') {
       const file = data.icon as File
       const { data: uploadData, error: uploadError } =
         await supabaseBrowserClient.storage
-          .from(bucket)
+          .from('skills')
           .upload(`icons/${Date.now()}-${file.name}`, file)
 
       if (uploadError) throw uploadError
@@ -20,7 +19,7 @@ export const addItemToDatabase = async (
       const {
         data: { publicUrl },
       } = supabaseBrowserClient.storage
-        .from(bucket)
+        .from('skills')
         .getPublicUrl(uploadData.path)
 
       iconUrl = publicUrl
@@ -28,25 +27,61 @@ export const addItemToDatabase = async (
 
     const insertData: any = { name: data?.name }
     if (iconUrl) insertData.icon = iconUrl
-    if (data.url) insertData.url = data.url
 
     const { error: insertError } = await supabaseBrowserClient
-      .from(table)
+      .from('skills_dataset')
       .insert([insertData])
 
     if (insertError) throw insertError
 
-    return {
-      success: true,
-      message: `${
-        table === 'skills_dataset' ? 'Skill' : 'Social'
-      } added successfully!`,
-    }
+    return { success: true, message: 'Skill added successfully!' }
   } catch (error: any) {
-    console.error(
-      `Error adding ${table === 'skills_dataset' ? 'skill' : 'social'}:`,
-      error.message
-    )
+    console.error('Error adding skill:', error.message)
+    return { success: false, message: error.message }
+  }
+}
+
+export const addSocialToDatabase = async (data: {
+  name: string
+  icon?: File | string
+  url: string
+}) => {
+  let iconUrl = ''
+
+  try {
+    if (data?.icon && typeof data.icon !== 'string') {
+      const file = data.icon as File
+      const { data: uploadData, error: uploadError } =
+        await supabaseBrowserClient.storage
+          .from('socials')
+          .upload(`icons/${Date.now()}-${file.name}`, file)
+
+      if (uploadError) throw uploadError
+
+      const {
+        data: { publicUrl },
+      } = supabaseBrowserClient.storage
+        .from('socials')
+        .getPublicUrl(uploadData.path)
+
+      iconUrl = publicUrl
+    }
+
+    const insertData: any = {
+      name: data.name,
+      url: data.url,
+    }
+    if (iconUrl) insertData.icon = iconUrl
+
+    const { error: insertError } = await supabaseBrowserClient
+      .from('socials')
+      .insert([insertData])
+
+    if (insertError) throw insertError
+
+    return { success: true, message: 'Social added successfully!' }
+  } catch (error: any) {
+    console.error('Error adding social:', error.message)
     return { success: false, message: error.message }
   }
 }

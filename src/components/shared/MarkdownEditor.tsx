@@ -10,12 +10,14 @@ interface MarkdownEditorProps {
   value: string
   onChange: (value: string) => void
   className?: string
+  placeholder?: string
 }
 
 const MarkdownEditor = ({
   value,
   onChange,
   className,
+  placeholder,
 }: MarkdownEditorProps) => {
   const [previewMode, setPreviewMode] = useState(false)
 
@@ -24,11 +26,12 @@ const MarkdownEditor = ({
       {!previewMode ? (
         <textarea
           className={clsx(
-            'w-full h-40 text-lg px-4 py-2 border border-dark-500 bg-dark-500/20 rounded-lg minimal-scrollbar outline-none',
+            'w-full h-40 text-lg px-4 py-2 border border-dark-500 bg-dark-500/20 rounded-lg minimal-scrollbar outline-none md:placeholder:text-sm placeholder:text-base placeholder:text-muted-foreground',
             className
           )}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
         />
       ) : (
         <div
@@ -43,8 +46,8 @@ const MarkdownEditor = ({
 
       <Button
         text={previewMode ? 'Edit' : 'Preview'}
-        className="rounded-lg sm:px-4 sm:py-2 bg-dark-500"
-        textClassName="font-medium sm:text-sm"
+        className="rounded-lg !py-1.5 !px-8 bg-dark-500"
+        textClassName="font-medium !text-sm"
         noGradient
         onClick={() => setPreviewMode(!previewMode)}
       />

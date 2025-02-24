@@ -20,6 +20,8 @@ export { default as CustomFormField } from '@/components/shared/CustomFormField'
 export { default as MarkdownEditor } from '@/components/shared/MarkdownEditor'
 export { default as VerifyCode } from '@/components/shared/VerifyCode'
 export { default as FileUploader } from '@/components/shared/FileUploader'
+export { default as MultiSelect } from '@/components/shared/MultiSelect'
 
 export { default as SkillsForm } from '@/components/forms/SkillsForm'
 export { default as SocialsForm } from '@/components/forms/SocialsForm'
+export { default as AdminDataForm } from '@/components/forms/AdminDataForm'

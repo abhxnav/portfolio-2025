@@ -8,11 +8,11 @@ import { Form } from '@/components/ui'
 import { CustomFormField } from '@/components'
 import { useEffect, useState } from 'react'
 import {
-  addItemToDatabase,
+  addSocialToDatabase,
   deleteItem,
   getAllItems,
 } from '@/actions/data.actions'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Trash2Icon } from 'lucide-react'
 import Image from 'next/image'
 
 interface FormMessageType {
@@ -24,6 +24,7 @@ interface Social {
   id: string
   name: string
   icon: string
+  url: string
 }
 
 const SocialsForm = () => {
@@ -32,6 +33,7 @@ const SocialsForm = () => {
     defaultValues: {
       name: '',
       icon: undefined,
+      url: '',
     },
   })
 
@@ -43,7 +45,7 @@ const SocialsForm = () => {
 
   useEffect(() => {
     const getSocials = async () => {
-      const res = await getAllItems('socials_dataset')
+      const res = await getAllItems('socials')
       setExistingSocials(res.data || [])
     }
 
@@ -54,19 +56,15 @@ const SocialsForm = () => {
     setLoading(true)
     setMessage(null)
 
-    const { icon, name } = data
+    const { icon, name, url } = data
 
-    const response = await addItemToDatabase(
-      { name, icon },
-      'socials_dataset',
-      'socials'
-    )
+    const response = await addSocialToDatabase({ name, icon, url })
 
     if (response.success) {
       setMessage({ type: 'success', text: response.message })
       reset()
 
-      const res = await getAllItems('socials_dataset')
+      const res = await getAllItems('socials')
       setExistingSocials(res.data || [])
     } else {
       setMessage({ type: 'error', text: response.message })
@@ -76,10 +74,10 @@ const SocialsForm = () => {
   }
 
   const handleDelete = async (id: string) => {
-    const res = await deleteItem(id, 'socials_dataset')
+    const res = await deleteItem(id, 'socials')
 
     if (res.success) {
-      const res = await getAllItems('socials_dataset')
+      const res = await getAllItems('socials')
       setExistingSocials(res.data || [])
     } else {
       setMessage({ type: 'error', text: res.message })
@@ -102,6 +100,7 @@ const SocialsForm = () => {
             label="Icon"
             type="file"
           />
+          <CustomFormField control={control} name="url" label="URL" />
           <button
             type="submit"
             className="bg-dark-600 px-10 py-2 rounded-lg w-fit mt-2"
@@ -131,28 +130,34 @@ const SocialsForm = () => {
 
       <div className="flex flex-col gap-4 text-dark-200">
         <h2 className="text-xl font-semibold">Existing socials</h2>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-center gap-4">
           {existingSocials ? (
             existingSocials.map((social: Social) => (
-              <div className="flex flex-col gap-1 items-center" key={social.id}>
-                <Image
-                  src={social?.icon}
-                  alt={social?.name}
-                  width={10}
-                  height={10}
-                  className="size-12 object-contain"
+              <div
+                className="flex w-full items-center justify-center gap-4"
+                key={social?.id}
+              >
+                <div className="flex flex-col items-center gap-1">
+                  <Image
+                    src={social?.icon}
+                    alt={social?.name}
+                    width={10}
+                    height={10}
+                    className="size-10 object-contain"
+                  />
+                  <p className="text-sm">{social?.name}</p>
+                </div>
+                <input
+                  value={social?.url}
+                  className="border border-dark-500 bg-dark-500/20 text-dark-200 p-2 rounded-lg w-full"
                 />
-                <p>{social?.name}</p>
-                <button
-                  className="text-xs bg-red-800 px-2 rounded-xl hover:brightness-90"
-                  onClick={() => handleDelete(social.id)}
-                >
-                  Delete
+                <button onClick={() => handleDelete(social.id)}>
+                  <Trash2Icon className="text-xs bg-red-800 px-2 rounded-lg hover:brightness-90 size-8" />
                 </button>
               </div>
             ))
           ) : (
-            <p className="text-dark-400">No skills added yet</p>
+            <p className="text-dark-400">No socials added yet</p>
           )}
         </div>
       </div>

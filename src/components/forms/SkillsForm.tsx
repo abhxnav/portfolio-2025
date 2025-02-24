@@ -8,7 +8,7 @@ import { Form } from '@/components/ui'
 import { CustomFormField } from '@/components'
 import { useEffect, useState } from 'react'
 import {
-  addItemToDatabase,
+  addSkillToDatabase,
   deleteItem,
   getAllItems,
 } from '@/actions/data.actions'
@@ -56,11 +56,7 @@ const SkillsForm = () => {
 
     const { icon, name } = data
 
-    const response = await addItemToDatabase(
-      { name, icon },
-      'skills_dataset',
-      'skills'
-    )
+    const response = await addSkillToDatabase({ name, icon })
 
     if (response.success) {
       setMessage({ type: 'success', text: response.message })

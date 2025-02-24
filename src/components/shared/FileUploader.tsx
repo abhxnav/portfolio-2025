@@ -4,13 +4,15 @@ import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useDropzone } from 'react-dropzone'
 import { IoCloudUploadOutline } from 'react-icons/io5'
+import clsx from 'clsx'
 
 interface FileUploaderProps {
   file: File | string | null
   onChange: (file: File) => void
+  className?: string
 }
 
-const FileUploader = ({ file, onChange }: FileUploaderProps) => {
+const FileUploader = ({ file, onChange, className }: FileUploaderProps) => {
   const [preview, setPreview] = useState<string | null>(null)
 
   useEffect(() => {
@@ -42,7 +44,10 @@ const FileUploader = ({ file, onChange }: FileUploaderProps) => {
   return (
     <div
       {...getRootProps()}
-      className="file-upload flex flex-col gap-2 items-center justify-center p-4 rounded-lg border-2 border-dark-500 border-dashed bg-dark-500/20 cursor-pointer"
+      className={clsx(
+        'file-upload flex flex-col gap-2 items-center justify-center p-4 rounded-lg border-2 border-dark-500 border-dashed bg-dark-500/20 cursor-pointer',
+        className
+      )}
     >
       <input {...getInputProps()} />
       {preview ? (
